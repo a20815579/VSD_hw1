@@ -1,18 +1,18 @@
 // instrution
 `define OP6to2      instr[6:2]
-`define FUNCT3      inst[14:12]
-`define FUNCT3_2    inst[14]
-`define RDIDX       inst[11:7]
-`define RS1IDX      inst[19:15]
-`define RS2IDX      inst[24:20]
-`define FUNCT7      inst[31:25]
-`define FUNCT7_5    inst[30]
-`define ImmI        {{21{inst[31]}}, inst[30:20]}
-`define ImmST       {{21{inst[31]}}, inst[30:25], inst[11:7]}
-`define ImmB        {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0}
-`define ImmU        {inst[31:12], 12'b0}
-`define ImmJ        {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0}
-`define ImmShamt    {27'd0, inst[24:20]}
+`define FUNCT3      instr[14:12]
+`define FUNCT3_2    instr[14]
+`define RDIDX       instr[11:7]
+`define RS1IDX      instr[19:15]
+`define RS2IDX      instr[24:20]
+`define FUNCT7      instr[31:25]
+`define FUNCT7_5    instr[30]
+`define ImmI        {{21{instr[31]}}, instr[30:20]}
+`define ImmST       {{21{instr[31]}}, instr[30:25], instr[11:7]}
+`define ImmB        {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0}
+`define ImmU        {instr[31:12], 12'b0}
+`define ImmJ        {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0}
+`define ImmShamt    {27'd0, instr[24:20]}
 
 // opcode
 // R-Type
@@ -54,8 +54,15 @@
 `define BGE     3'b101
 `define BLTU    3'b110
 `define BGEU    3'b111
-`define UNCOND  3'b010
-`define NOBRA   3'b011
+// `define UNCOND  3'b010
+// `define NOBRA   3'b011
+`define NOBRA     2'b00
+`define BrCond    2'b01
+`define BrUcond   2'b10
+
+`define BEQ2    2'b00
+`define BLT2    2'b10
+`define BLTU2   2'b11
 
 //other
 `define OP1FromRS1    0
@@ -79,25 +86,25 @@
 
 module stage_ID (
   input   clk, rst,
-  input   stall
-  input   [31:0]  instr, IFID_pc,
+  input   stall,
+  input   [31:0]  instr, pc_fromIF, pc4_fromIF,
+  output  [2:0]   funct3_toEX,
+  output logic        op1_ctrl, op2_ctrl,
+  output logic [1:0]  br_op,
   output logic [3:0]  alu_op,
-  output logic [31:0] imm, rs1, rs2,
+  output logic [4:0]  rd_idx_toEX, mem_wr_toEX, mem_rd_toEX,
+  output logic [31:0] imm, rs1, rs2, pc_toEX, pc4_toEX
 );
 
-logic [31:0] ID_instr, ID_pc;
+logic [31:0]  regfile [31:0];
+logic [31:0]  rs1_idx, rs2_idx;
 
 assign wire funct3_toEX = `FUNCT3;
 
 // deal immediate
 always_ff @(posedge clk) begin
   case(`OP6to2)
-    `ItypeOP:
-      if(`FUNCT3 == `SR or `FUNCT3 == `SL)
-        imm <= `ImmShamt;
-      else
-        imm <= `ImmI;
-    `LD, `JALR: 
+    `ItypeOP, `LD, `JALR: 
       imm <= `ImmI;
     `ST:
       imm <= `ImmST;
@@ -132,14 +139,16 @@ end
 // branch type op ?
 always_ff @(posedge clk) begin
     if (rst || clear) begin
-        br_en <= 0;
+        br_op <= `NOBRA;
     end
     else begin
       case(`OP6to2)
-        `BRA, `JAL, `JALR:
-          br_en <= 1;
+        `BRA: 
+          br_op <= `BrCond;
+        `JAL, `JALR:
+          br_op <= `BrUcond;
         default: 
-          br_en <= 0;
+          br_op <= `NOBRA;
       endcase
     end
 end
@@ -186,13 +195,15 @@ always_ff @(posedge clk) begin
   end
 end
 
+// deal LUI
 always_comb begin
   if(`OP6to2 == `LUI)
-    rs1_idx = 5'd0;
+    rs1_idx_fromIF = 5'd0;
   else
-    rs1_idx = `RS1IDX;
+    rs1_idx_fromIF = `RS1IDX;
 end
 
+// write regfile
 always_ff @(posedge clk) begin
   if (rst) begin
     for (int j = 1; j < 32; j = j + 1) begin
@@ -207,15 +218,27 @@ end
 
 // read regfile
 always_comb begin
-  rs1 = regfile[rs1_idx];
-  rs2 = regfile[rs2_idx];
+  rs1 = regfile[rs1_idx_fromIF];
+  rs2 = regfile[rs2_idx_fromIF];
+end
+
+// rs1 rs2 idx register
+always_ff @(posedge clk) begin
+    if (rst || clear) begin
+        rs1_idx_toEX <= 5'd0;
+        rs2_idx_toEX <= 5'd0;
+    end
+    else begin
+        rs1_idx_toEX <= rs1_idx_fromIF;
+        rs2_idx_toEX <= rs2_idx_fromIF;
+    end
 end
 
 // PC
 always_ff @(posedge clk) begin
   if (rst || clear) begin
-    pc_toEX <= 32'h0;
-    pc4_toEX <= 32'h0;
+    pc_toEX <= 32'd0;
+    pc4_toEX <= 32'd0;
   end
   else begin
     pc_toEX <= pc_fromIF;

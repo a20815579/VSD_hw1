@@ -195,8 +195,8 @@ end
 
 always_ff @(posedge clk) begin
   if (rst) begin
-    for (int j = 1; j < 32; j = j + 1) begin
-      regfile[j] <= 0;
+    for (int i = 0; i < 32; i = i + 1) begin
+      regfile[i] <= 0;
     end
   end
   // write back
