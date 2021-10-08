@@ -64,6 +64,26 @@
 `define BLT2    2'b10
 `define BLTU2   2'b11
 
+// load store op
+`define LB      3'b000
+`define LH      3'b001
+`define LW      3'b010
+`define LBU     3'b100
+`define LHU     3'b101
+
+`define SB      2'b00
+`define SH      2'b01
+`define SW      2'b10
+
+`define MemS          0
+`define MemUS         1
+
+`define MemByte      2'b00
+`define MemHalf      2'b01
+`define MemWord      2'b10
+
+`define AddrLast2     alu_res_toMEM[1:0]
+
 //other
 `define OP1FromRS1    0
 `define OP1FromPC     1
@@ -73,12 +93,6 @@
 
 `define WbRd          0
 `define WbPC          1
-
-// `define MemS          0
-// `define MemUS         1
-// `define MemByte       0
-// `define MemHalf       1
-// `define MemWord       2
 
 `define EXFromID            0
 `define EXFwFromMEM         1
@@ -206,13 +220,13 @@ end
 // write regfile
 always_ff @(posedge clk) begin
   if (rst) begin
-    for (int j = 1; j < 32; j = j + 1) begin
-      regfile[j] <= 0;
+    for (int i = 0; i < 32; i = i + 1) begin
+      regfile[i] <= 0;
     end
   end
   // write back
-  else if (rdIdxFromWB > 0) begin
-    RF[rdIdxFromWB] <= WBDataFromWB;
+  else if (rd_idx_fromWB > 0) begin
+    regfile[rd_idx_fromWB] <= wb_data;
   end
 end
 
