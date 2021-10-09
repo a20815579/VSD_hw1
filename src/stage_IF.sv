@@ -1,12 +1,17 @@
 module stage_IF (
-  input clk,    // Clock
-  input clk_en, // Clock Enable
-  input rst_n,  // Asynchronous reset active low
-  
+  input           clk, rst,
+  input [31:0]    instr_from_mem, alu_res,
+  output logic        br_take, stall_IF,
+  output logic [13:0] instr_addr,
+  output logic [31:0] pc_toID, pc4_toID
 );
+
+logic [31:0]  pc, pc4, br_take_reg, stall_IF_reg, instr ,last_instr;
 
 always_comb begin
     pc4 = pc + 4;
+    instr_addr = pc[15:2];
+    instr = (br_take_reg) ? 32'd0 : (stall_IF_reg) ? last_instr : instr_from_mem;
 end
 
 // pc ctrl
@@ -15,7 +20,7 @@ always_ff @(posedge clk) begin
       pc <= 32'd0;
   else if (br_take)
       pc <= alu_res;
-  else if (!stall)
+  else if (!stall_IF)
       pc <= pc4;
   else
       pc <= pc;
@@ -26,41 +31,27 @@ always_ff @(posedge clk) begin
     pc_toID <= 0;
     pc4_toID <= 0;
   end
-  else if (!stall) begin
+  else if (stall_IF) begin
+    pc_toID <= pc_toID;
+    pc4_toID <= pc4_toID;    
+  end
+  else begin
     pc_toID <= pc;
     pc4_toID <= pc4;
   end
-  else begin
-    pc_toID <= pc_toID;
-    pc4_toID <= pc4_toID;
+end
+
+always_ff @(posedge clk) begin
+  if (rst) begin
+    last_instr <= 0;
+    br_take_reg <= 0;
+    stall_IF_reg <= 1;
   end
-end
-
-always_ff @(posedge clk) begin
-    if (rst) begin
-        last_instr <= 0;
-    end
-    else begin
-        last_instr <= instr;
-    end
-end
-
-always_comb begin
-    instr_addr = pc[15:2];
-    // inst = (lastBranchTaken) ? 32'd0 : (lastStall) ? lastInst : instFromIMem;
-end
-
-// ?
-/* branch taken, stall */
-always_ff @(posedge clk) begin
-    if (rst) begin
-        lastBranchTaken <= 0;
-        lastStall <= 1;
-    end
-    else begin
-        lastBranchTaken <= branchTaken;
-        lastStall <= stall;
-    end
+  else begin
+    last_instr <= instr;
+    br_take_reg <= br_take;
+    stall_IF_reg <= stall_IF;
+  end
 end
 
 endmodule
