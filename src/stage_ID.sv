@@ -1,18 +1,17 @@
-
+`include "../include/all_def.svh"
 
 module stage_ID (
   input   clk, rst, flush_ID,
   input   [31:0]  instr, pc_fromIF, pc4_fromIF, wb_data,  
-  output logic        op1_ctrl, op2_ctrl, rd_src_toEX, mem_wr_toEX, mem_rd_toEX,
+  output logic        op1_ctrl, op2_ctrl, rd_src_fromID, mem_wr_fromID, mem_rd_fromIF, mem_rd_fromID,
   output logic [1:0]  br_op,
-  output logic [2:0]  funct3_toEX,
+  output logic [2:0]  funct3_fromID,
   output logic [3:0]  alu_op,
-  output logic [4:0]  rd_idx_toEX, 
-  output logic [31:0] imm, rs1_toEX, rs2_toEX, pc_toEX, pc4_toEX
+  output logic [4:0]  rs1_idx_fromIF, rs2_idx_fromIF, rs1_idx_fromID, rs2_idx_fromID, rd_idx_fromID, 
+  output logic [31:0] imm, rs1_fromID, rs2_fromID, pc_fromID, pc4_fromID
 );
 
 logic [31:0]  regfile [31:0];
-logic [31:0]  rs1_idx_fromIF, rs2_idx_fromIF;
 
 // deal immediate
 always_ff @(posedge clk) begin
@@ -77,42 +76,56 @@ always_ff @(posedge clk) begin
     op2_ctrl <= `OP2FromIMM;
 end
 
+always_comb begin
+  if (`OP6to2 == `LD) 
+    mem_rd_fromIF <= 1;
+  else
+    mem_rd_fromIF <= 0;
+end
+
+always_ff @(posedge clk) begin
+  if(rst || flush_ID)
+    mem_rd_fromID <= 0;
+  else
+    mem_rd_fromID <= mem_rd_fromIF;
+end
+
 // memory read and write ctrl
 always_ff @(posedge clk) begin
   if(rst || flush_ID)
-    mem_rd_toEX <= 0;
+    mem_rd_fromID <= 0;
   else if (`OP6to2 == `LD) 
-    mem_rd_toEX <= 1;
+    mem_rd_fromID <= 1;
   else
-    mem_rd_toEX <= 0;
+    mem_rd_fromID <= 0;
 
   if(rst || flush_ID)
-    mem_wr_toEX <= 0;
+    mem_wr_fromID <= 0;
   else if (`OP6to2 == `ST) begin
-    mem_wr_toEX <= 1;
+    mem_wr_fromID <= 1;
   else
-    mem_wr_toEX <= 0;
+    mem_wr_fromID <= 0;
 end
 
 // rd index
 always_ff @(posedge clk) begin
   if (rst || flush_ID) begin
-    rd_idx_toEX <= 0;
+    rd_idx_fromID <= 0;
   end
   else begin
     if (`OP6to2 == `ST || `OP6to2 == `BRA)
-      rd_idx_toEX <= 0;
+      rd_idx_fromID <= 0;
     else
-      rd_idx_toEX <= `RDIDX;
+      rd_idx_fromID <= `RDIDX;
   end
 end
 
 always_ff @(posedge clk) begin
   case(`OP6to2)
     `JAL, `JALR:
-      rd_src_toEX <= `RdFromPC4;
+      rd_src_fromID <= `RdFromPC4;
     default: 
-      rd_src_toEX <= `RdFromALU;
+      rd_src_fromID <= `RdFromALU;
 end
 
 // deal LUI
@@ -138,35 +151,35 @@ end
 
 // read regfile
 always_ff @(posedge clk) begin
-  rs1_toEX <= regfile[rs1_idx_fromIF];
-  rs2_toEX <= regfile[rs2_idx_fromIF];
+  rs1_fromID <= regfile[rs1_idx_fromIF];
+  rs2_fromID <= regfile[rs2_idx_fromIF];
 end
 
 // rs1 rs2 idx register
 always_ff @(posedge clk) begin
   if (rst || flush_ID) begin
-    rs1_idx_toEX <= 5'd0;
-    rs2_idx_toEX <= 5'd0;
+    rs1_idx_fromID <= 5'd0;
+    rs2_idx_fromID <= 5'd0;
   end
   else begin
-    rs1_idx_toEX <= rs1_idx_fromIF;
-    rs2_idx_toEX <= rs2_idx_fromIF;
+    rs1_idx_fromID <= rs1_idx_fromIF;
+    rs2_idx_fromID <= rs2_idx_fromIF;
   end
 end
 
 always_ff @(posedge clk) begin 
-  funct3_toEX <= `FUNCT3;
+  funct3_fromID <= `FUNCT3;
 end
 
 // PC
 always_ff @(posedge clk) begin
   if (rst || flush_ID) begin
-    pc_toEX <= 32'd0;
-    pc4_toEX <= 32'd0;
+    pc_fromID <= 32'd0;
+    pc4_fromID <= 32'd0;
   end
   else begin
-    pc_toEX <= pc_fromIF;
-    pc4_toEX <= pc4_fromIF;
+    pc_fromID <= pc_fromIF;
+    pc4_fromID <= pc4_fromIF;
   end
 end
 

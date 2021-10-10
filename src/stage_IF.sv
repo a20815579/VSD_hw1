@@ -3,7 +3,7 @@ module stage_IF (
   input [31:0]    instr_from_mem, alu_res,
   output logic        br_take, stall_IF,
   output logic [13:0] instr_addr,
-  output logic [31:0] pc_toID, pc4_toID
+  output logic [31:0] pc_fromIF, pc4_fromIF
 );
 
 logic [31:0]  pc, pc4, br_take_reg, stall_IF_reg, instr ,last_instr;
@@ -28,16 +28,16 @@ end
 
 always_ff @(posedge clk) begin
   if (rst || br_take) begin
-    pc_toID <= 0;
-    pc4_toID <= 0;
+    pc_fromIF <= 0;
+    pc4_fromIF <= 0;
   end
   else if (stall_IF) begin
-    pc_toID <= pc_toID;
-    pc4_toID <= pc4_toID;    
+    pc_fromIF <= pc_fromIF;
+    pc4_fromIF <= pc4_fromIF;    
   end
   else begin
-    pc_toID <= pc;
-    pc4_toID <= pc4;
+    pc_fromIF <= pc;
+    pc4_fromIF <= pc4;
   end
 end
 

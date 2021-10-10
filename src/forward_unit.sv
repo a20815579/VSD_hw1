@@ -1,3 +1,5 @@
+`include "../include/all_def.svh"
+
 module forward_unit(
   input               clk, flush_ID,
   input [4:0]         rs1_idx_ID, rs2_idx_ID, rd_idx_EX, rd_idx_MEM,

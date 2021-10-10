@@ -1,47 +1,56 @@
+`include "../include/all_def.svh"
+
 module stage_EX(
   input   clk, rst, mem_wr_fromID, mem_rd_fromID, op1_ctrl, op2_ctrl, rd_src_fromID,
   input [1:0]     rs1_ctrl, rs2_ctrl,
   input [2:0]     funct3_fromID
-  input [4:0]     rd_idx_fromID,
-  input [31:0]    pc_fromID, imm_fromID, pc4_fromID,
-  input [31:0]    rs1_fromID, rs1_fromEX, rs1_fromMEM, rs2_fromID, rs2_fromEX, rs2_fromMEM,
-  output logic    br_take, rd_src_toMEM, mem_rd,
+  input [4:0]     rs2_idx_fromID, rd_idx_fromID,
+  input [31:0]    imm, pc_fromID, pc4_fromID,
+  input [31:0]    rs1_fromID, rs1_fw_fromEX, rs1_fw_fromMEM, rs2_fromID, rs2_fw_fromEX, rs2_fw_fromMEM,
+  output logic    br_take, rd_src_fromEX, mem_rd_fromEX,
   output logic [1:0]    wr_mem_en,
-  output logic [2:0]    funct3_toMEM,
-  output logic [4:0]    rd_idx_toMEM,
+  output logic [2:0]    funct3_fromEX,
+  output logic [4:0]    rs2_idx_fromEX, rd_idx_fromEX,
   output logic [13:0]   mem_addr,
-  output logic [31:0]   alu_res_EX ,alu_res_toMEM, pc4_toMEM
+  output logic [31:0]   alu_res, rd_fromEX ,pc4_fromEX
   );
 
 logic     br_cond_tmp, br_cond_final;
-logic [31:0]  alu_res_EX, op1, op2, rs1_final, rs2_final;
+logic [31:0]  alu_res, op1, op2, rs1_final, rs2_final;
 
 // ALU
 always_comb begin
   case (alu_op_fromID)
     `ADD:
-      alu_res_EX = op1 + op2;
+      alu_res = op1 + op2;
     `SUB:
-      alu_res_EX = op1 - op2;
+      alu_res = op1 - op2;
     `SLL:
-      alu_res_EX = op1 << (op2[4:0]);
+      alu_res = op1 << (op2[4:0]);
     `SRL:
-      alu_res_EX = op1 >> (op2[4:0]);
+      alu_res = op1 >> (op2[4:0]);
     `SLT:
-      alu_res_EX = $signed(op1) < $signed(op2);
+      alu_res = $signed(op1) < $signed(op2);
     `SLTU:
-      alu_res_EX = $unsigned(op1) < $unsigned(op2);
+      alu_res = $unsigned(op1) < $unsigned(op2);
     `XOR:
-      alu_res_EX = op1 ^ op2;    
+      alu_res = op1 ^ op2;    
     `OR:
-      alu_res_EX = op1 | op2;
+      alu_res = op1 | op2;
     `AND:
-      alu_res_EX = op1 & op2;    
+      alu_res = op1 & op2;    
     `SRA:
-      alu_res_EX = $signed(op1) >>> (op2[4:0]);
+      alu_res = $signed(op1) >>> (op2[4:0]);
     default:
-      alu_res_EX = 32'd0;
+      alu_res = 32'd0;
   endcase
+end
+
+always_ff @(posedge clk) begin
+  if(rd_src_fromID == RdFromPC4)
+    rd_fromEX <= pc4_fromID;
+  else
+    rd_fromEX <= alu_res;
 end
 
 // branch condition
@@ -78,9 +87,9 @@ always_comb begin
     `RSFromID:
       rs1_final = rs1_fromID;
     `RSFwFromEX:
-      rs1_final = rs1_fromEX;
+      rs1_final = rs1_fw_fromEX;
     `RSFwFromMEM:
-      rs1_final = rs1_fromMEM;
+      rs1_final = rs1_fw_fromMEM;
     default:
       rs1_final = rs1_fromID;
   endcase
@@ -98,9 +107,9 @@ always_comb begin
     `RSFromID:
       rs2_final = rs2_fromID;
     `RSFwFromEX:
-      rs2_final = rs2_fromEX;
+      rs2_final = rs2_fw_fromEX;
     `RSFwFromMEM:
-      rs2_final = rs2_fromMEM;
+      rs2_final = rs2_fw_fromMEM;
     default:
       rs2_final = rs2_fromID;
   endcase
@@ -110,13 +119,12 @@ always_comb begin
   if (op2_ctrl == `OP2FromRS2)
     op2 = rs2_final;
   else
-    op2 = imm_fromID;
+    op2 = imm;
 end
 
 // prepare for store to memory
 always_comb begin
-  mem_rd = mem_rd_fromID;
-  mem_addr = alu_res_EX[15:2];
+  mem_addr = alu_res[15:2];
 end
 
 always_comb begin
@@ -151,24 +159,21 @@ end
 
 always_ff @(posedge clk) begin
   if (rst) begin    
-    //rs2_toMEM <= 0;
-    //mem_wr_toMEM <= 0;
-    //mem_rd_toMEM <= 0;
-    pc4_toMEM <= 0;
-    rd_idx_toMEM <= 1'b0;
-    funct3_toMEM <= 1'b0;
-    alu_res_toMEM <= 1'b0; 
+    rs2_idx_fromEX <= 0;
+    mem_rd_fromEX <= 0;
+    pc4_fromEX <= 0;
+    rd_idx_fromEX <= 1'b0;
+    funct3_fromEX <= 1'b0;
+    //alu_res_fromEX <= 1'b0; 
   end
   else begin
-    // pc4_toMEM <= pc4_fromID;
-    //rs2_toMEM <= rs2_final;
-    //mem_wr_toMEM <= mem_wr_fromID;
-    //mem_rd_toMEM <= mem_rd_fromID;
-    pc4_toMEM <= pc4_fromID;
-    rd_src_toMEM <= rd_src_fromID;
-    rd_idx_toMEM <= rd_idx_fromID;
-    funct3_toMEM <= funct3_fromID; 
-    alu_res_toMEM <= alu_res_EX; 
+    rs2_idx_fromEX <= rs2_idx_fromID;
+    mem_rd_fromEX <= mem_rd_fromID;
+    pc4_fromEX <= pc4_fromID;
+    rd_src_fromEX <= rd_src_fromID;
+    rd_idx_fromEX <= rd_idx_fromID;
+    funct3_fromEX <= funct3_fromID; 
+    //alu_res_fromEX <= alu_res; 
   end
 end
 

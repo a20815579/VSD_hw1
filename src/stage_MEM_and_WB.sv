@@ -1,9 +1,10 @@
 module stage_MEM_and_WB (
-  input   clk, rst_n, mem_rd_fromEX, rd_src_fromEX,
+  input   clk, mem_rd_fromEX, rd_src_fromEX,
   input [2:0]   funct3_fromEX,
   input [4:0]   rd_idx_fromEX,
-  output logic [4:0]    rd_idx_toWB,
-  output logic [31:0]   wb_data, rd_toWB
+  input [31:0]  rd_fromEX, mem_read_out,
+  output logic [4:0]    rd_idx_fromMEM,
+  output logic [31:0]   wb_data, rd_fromMEM
 );
 
 // load
@@ -23,10 +24,8 @@ always_comb begin
       default: 
         wb_data = 32'd0;
     endcase
-  else if (rd_src_fromEX == `RdFromPC4)
-    wb_data = pc4_fromEX;
   else
-    wb_data = alu_res_fromEX;
+    wb_data = rd_fromEX;
 end
 
 always_comb begin
@@ -38,12 +37,12 @@ end
 
 always_ff @(posedge clk) begin
   if (rst) begin
-    rd_idx_toWB <= 5'd0;
-    rd_toWB <= 32'd0;
+    rd_idx_fromMEM <= 5'd0;
+    rd_fromMEM <= 32'd0;
   end
   else begin
-    rd_idx_toWB <= rd_idx_fromEX;
-    rd_toWB <= alu_res_fromEX;
+    rd_idx_fromMEM <= rd_idx_fromEX;
+    rd_fromMEM <= rd_fromEX;
   end
 end
 
