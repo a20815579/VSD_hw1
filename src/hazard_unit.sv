@@ -1,5 +1,5 @@
 module hazard_unit (
-  input       mem_rd_fromIF
+  input       mem_rd_fromIF, br_take,
   input [4:0] rs1_idx_fromIF, rs2_idx_fromIF, rd_idx_fromID, 
   output logic  stall_IF, flush_ID
 );

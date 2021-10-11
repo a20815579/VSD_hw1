@@ -1,0 +1,27 @@
+//
+// File created by:  irun
+// Do not modify this file
+//
++prog_path=/homes/nfs/Parker/sandy/H24071037/./sim/prog0
++incdir+/homes/nfs/Parker/sandy/H24071037/./src+/homes/nfs/Parker/sandy/H24071037/./include+/homes/nfs/Parker/sandy/H24071037/./sim
++define+prog0
++access+r
+-MESSAGES
++EMGRLOG
+irun.log
+-XLSTIME
+1633854887
+-XLKEEP
+-XLMODE
+./INCA_libs/irun.lnx8664.15.20.nc
+-RUNMODE
+-CDSLIB
+./INCA_libs/irun.lnx8664.15.20.nc/cds.lib
+-HDLVAR
+./INCA_libs/irun.lnx8664.15.20.nc/hdl.var
+-XLNAME
+irun
+-XLVERSION
+"TOOL:	irun(64)	15.20-s039"
+-XLNAME
+./INCA_libs/irun.lnx8664.15.20.nc/CASGPU_9780

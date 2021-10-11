@@ -1,0 +1,11 @@
+./top.sv
+./stage_IF.sv
+./stage_ID.sv
+./stage_EX.sv
+./stage_MEM_and_WB.sv
+./forward_unit.sv
+./hazard_unit.sv
+./SRAM_wrapper.sv
+./SRAM/SRAM_rtl.sv
+/homes/nfs/Parker/sandy/H24071037/./src/SRAM/SRAM_rtl.sv
+/homes/nfs/Parker/sandy/H24071037/./include/SRAM/SRAM_rtl.sv

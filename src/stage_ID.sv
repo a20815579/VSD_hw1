@@ -2,12 +2,14 @@
 
 module stage_ID (
   input   clk, rst, flush_ID,
+  input   [4:0]   wb_idx,
   input   [31:0]  instr, pc_fromIF, pc4_fromIF, wb_data,  
   output logic        op1_ctrl, op2_ctrl, rd_src_fromID, mem_wr_fromID, mem_rd_fromIF, mem_rd_fromID,
   output logic [1:0]  br_op,
   output logic [2:0]  funct3_fromID,
   output logic [3:0]  alu_op,
-  output logic [4:0]  rs1_idx_fromIF, rs2_idx_fromIF, rs1_idx_fromID, rs2_idx_fromID, rd_idx_fromID, 
+  output logic [4:0]  rs1_idx_fromIF, rs2_idx_fromIF, rs1_idx_fromID,
+  output logic [4:0]  rs2_idx_fromID, rd_idx_fromID,
   output logic [31:0] imm, rs1_fromID, rs2_fromID, pc_fromID, pc4_fromID
 );
 
@@ -33,19 +35,19 @@ end
 
 // ALU op
 always_ff @(posedge clk) begin
-  if (rst || flush_ID) begin
+  if (rst || flush_ID)
     alu_op <= `NOP;
-  end
-  else begin
+  else
     case(`OP6to2)
-      `RtypeOP, `ItypeOP: 
+      `RtypeOP: 
         alu_op <= {`FUNCT7_5, `FUNCT3};
+      `ItypeOP: 
+        alu_op <= (`FUNCT3 == `SR) ? {`FUNCT7_5, `FUNCT3} : {1'b0, `FUNCT3};
       `LD, `JALR, `ST, `BRA, `AUIPC, `LUI, `JAL:
         alu_op <= `ADD;
       default:
         alu_op <= `NOP;
     endcase
-  end
 end
 
 // branch type op
@@ -77,15 +79,18 @@ always_ff @(posedge clk) begin
 end
 
 always_comb begin
-  if (`OP6to2 == `LD) 
-    mem_rd_fromIF <= 1;
+  if(flush_ID)
+    mem_rd_fromIF <= 1'b0;
   else
-    mem_rd_fromIF <= 0;
+    if (`OP6to2 == `LD) 
+      mem_rd_fromIF <= 1'b1;
+    else
+      mem_rd_fromIF <= 1'b0;
 end
 
 always_ff @(posedge clk) begin
   if(rst || flush_ID)
-    mem_rd_fromID <= 0;
+    mem_rd_fromID <= 1'b0;
   else
     mem_rd_fromID <= mem_rd_fromIF;
 end
@@ -93,31 +98,22 @@ end
 // memory read and write ctrl
 always_ff @(posedge clk) begin
   if(rst || flush_ID)
-    mem_rd_fromID <= 0;
-  else if (`OP6to2 == `LD) 
-    mem_rd_fromID <= 1;
+    mem_wr_fromID <= 1'b0;
+  else if (`OP6to2 == `ST) 
+    mem_wr_fromID <= 1'b1;
   else
-    mem_rd_fromID <= 0;
-
-  if(rst || flush_ID)
-    mem_wr_fromID <= 0;
-  else if (`OP6to2 == `ST) begin
-    mem_wr_fromID <= 1;
-  else
-    mem_wr_fromID <= 0;
+    mem_wr_fromID <= 1'b0;
 end
 
 // rd index
 always_ff @(posedge clk) begin
-  if (rst || flush_ID) begin
-    rd_idx_fromID <= 0;
-  end
-  else begin
+  if (rst || flush_ID)
+    rd_idx_fromID <= 5'd0;
+  else
     if (`OP6to2 == `ST || `OP6to2 == `BRA)
-      rd_idx_fromID <= 0;
+      rd_idx_fromID <= 5'd0;
     else
       rd_idx_fromID <= `RDIDX;
-  end
 end
 
 always_ff @(posedge clk) begin
@@ -126,6 +122,7 @@ always_ff @(posedge clk) begin
       rd_src_fromID <= `RdFromPC4;
     default: 
       rd_src_fromID <= `RdFromALU;
+  endcase
 end
 
 // deal LUI
@@ -136,17 +133,15 @@ always_comb begin
     rs1_idx_fromIF = `RS1IDX;
 end
 
+assign rs2_idx_fromIF = `RS2IDX;
+
 // write regfile
 always_ff @(posedge clk) begin
-  if (rst) begin
-    for (int i = 0; i < 32; i = i + 1) begin
-      regfile[i] <= 0;
-    end
-  end
+  if (rst)
+    regfile[0] <= 32'd0;
   // write back
-  else if (rd_idx_fromWB > 0) begin
-    regfile[rd_idx_fromWB] <= wb_data;
-  end
+  else if (wb_idx > 5'd0)
+    regfile[wb_idx] <= wb_data;
 end
 
 // read regfile

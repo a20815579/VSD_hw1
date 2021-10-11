@@ -1,0 +1,98 @@
+Magic 271485
+Revision Verdi_O-2018.09
+
+; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
+viewPort 0 23 1280 657 277 92
+
+; File list:
+; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
+openDirFile -d / "" "/homes/nfs/Parker/sandy/H24071037/build/top.fsdb"
+
+; file time scale:
+; fileTimeScale ### s|ms|us|ns|ps
+
+; signal spacing:
+signalSpacing 5
+
+; windowTimeUnit is used for zoom, cursor & marker
+; waveform viewport range
+zoom 0.000000 8235384.615385
+cursor 2264243.04120709607
+marker 0.000000
+
+; user define markers
+; userMarker time_pos marker_name color linestyle
+; visible top row signal index
+top 0
+; marker line index
+markerPos 10
+
+; event list
+; addEvent event_name event_expression
+; curEvent event_name
+
+
+
+COMPLEX_EVENT_BEGIN
+
+
+COMPLEX_EVENT_END
+
+
+
+; toolbar current search type
+; curSTATUS search_type
+curSTATUS ByChange
+
+
+addGroup "G1"
+activeDirFile "" "/homes/nfs/Parker/sandy/H24071037/build/top.fsdb"
+addSignal -h 15 /top_tb/TOP/ID/alu_op[3:0]
+addSignal -h 15 -holdScope br_op[1:0]
+addSignal -h 15 -holdScope clk
+addSignal -h 15 -holdScope flush_ID
+addSignal -h 15 -holdScope funct3_fromID[2:0]
+addSignal -h 15 -holdScope imm[31:0]
+addSignal -h 15 -holdScope instr[31:0]
+addSignal -h 15 -holdScope mem_rd_fromID
+addSignal -h 15 -holdScope mem_rd_fromIF
+addSignal -h 15 -holdScope mem_wr_fromID
+addGroup "G2"
+addSignal -h 15 /top_tb/TOP/ID/op1_ctrl
+addSignal -h 15 -holdScope op2_ctrl
+addSignal -h 15 -holdScope pc4_fromID[31:0]
+addSignal -h 15 -holdScope pc4_fromIF[31:0]
+addSignal -h 15 -holdScope pc_fromID[31:0]
+addSignal -h 15 -holdScope pc_fromIF[31:0]
+addSignal -h 15 -holdScope rd_idx_fromID[4:0]
+addSignal -h 15 -holdScope rd_src_fromID
+addSignal -h 15 -holdScope regfile[31:0]
+addSignal -h 15 -holdScope rs1_fromID[31:0]
+addSignal -h 15 -holdScope rs1_idx_fromID[4:0]
+addSignal -h 15 -holdScope rs1_idx_fromIF[4:0]
+addSignal -h 15 -holdScope rs2_fromID[31:0]
+addSignal -h 15 -holdScope rs2_idx_fromID[4:0]
+addSignal -h 15 -holdScope rs2_idx_fromIF[4:0]
+addSignal -h 15 -holdScope rst
+addGroup "G3"
+
+; getSignalForm Scope Hierarchy Status
+; active file of getSignalForm
+activeDirFile "" "/homes/nfs/Parker/sandy/H24071037/build/top.fsdb"
+
+GETSIGNALFORM_SCOPE_HIERARCHY_BEGIN
+getSignalForm close
+
+"/top_tb"
+"/top_tb/TOP"
+
+SCOPE_LIST_BEGIN
+"/top_tb"
+"/top_tb/TOP/DM1"
+"/top_tb/TOP/EX"
+"/top_tb/TOP/ID"
+SCOPE_LIST_END
+
+GETSIGNALFORM_SCOPE_HIERARCHY_END
+
+

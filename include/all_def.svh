@@ -48,7 +48,6 @@
 `define AND     4'b0111
 `define NOP     4'b1111
 
-`define SL      3'b001
 `define SR      3'b101
 
 //branch op

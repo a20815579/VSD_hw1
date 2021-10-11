@@ -1,0 +1,75 @@
+wvResizeWindow -win $_nWave1 0 23 1280 657
+wvSetPosition -win $_nWave1 {("G1" 0)}
+wvOpenFile -win $_nWave1 {/homes/nfs/Parker/sandy/H24071037/build/top.fsdb}
+wvGetSignalOpen -win $_nWave1
+wvGetSignalSetScope -win $_nWave1 "/top_tb"
+wvGetSignalSetScope -win $_nWave1 "/top_tb/TOP/DM1"
+wvGetSignalSetScope -win $_nWave1 "/top_tb/TOP/EX"
+wvSelectGroup -win $_nWave1 {G1}
+wvResizeWindow -win $_nWave1 0 23 1280 657
+wvResizeWindow -win $_nWave1 0 23 1280 657
+wvSetPosition -win $_nWave1 {("G1" 0)}
+wvSetPosition -win $_nWave1 {("G1" 0)}
+wvSetPosition -win $_nWave1 {("G2" 0)}
+wvAddGroup -win $_nWave1 {G2}
+wvSelectGroup -win $_nWave1 {G2}
+wvSelectGroup -win $_nWave1 {G1}
+wvSetCursor -win $_nWave1 2264243.041207
+wvGetSignalOpen -win $_nWave1
+wvGetSignalSetScope -win $_nWave1 "/top_tb/TOP/ID"
+wvSetPosition -win $_nWave1 {("G2" 26)}
+wvSetPosition -win $_nWave1 {("G2" 26)}
+wvAddSignal -win $_nWave1 -clear
+wvAddSignal -win $_nWave1 -group {"G1" \
+}
+wvAddSignal -win $_nWave1 -group {"G2" \
+{/top_tb/TOP/ID/alu_op\[3:0\]} \
+{/top_tb/TOP/ID/br_op\[1:0\]} \
+{/top_tb/TOP/ID/clk} \
+{/top_tb/TOP/ID/flush_ID} \
+{/top_tb/TOP/ID/funct3_fromID\[2:0\]} \
+{/top_tb/TOP/ID/imm\[31:0\]} \
+{/top_tb/TOP/ID/instr\[31:0\]} \
+{/top_tb/TOP/ID/mem_rd_fromID} \
+{/top_tb/TOP/ID/mem_rd_fromIF} \
+{/top_tb/TOP/ID/mem_wr_fromID} \
+{/top_tb/TOP/ID/op1_ctrl} \
+{/top_tb/TOP/ID/op2_ctrl} \
+{/top_tb/TOP/ID/pc4_fromID\[31:0\]} \
+{/top_tb/TOP/ID/pc4_fromIF\[31:0\]} \
+{/top_tb/TOP/ID/pc_fromID\[31:0\]} \
+{/top_tb/TOP/ID/pc_fromIF\[31:0\]} \
+{/top_tb/TOP/ID/rd_idx_fromID\[4:0\]} \
+{/top_tb/TOP/ID/rd_src_fromID} \
+{/top_tb/TOP/ID/regfile\[31:0\]} \
+{/top_tb/TOP/ID/rs1_fromID\[31:0\]} \
+{/top_tb/TOP/ID/rs1_idx_fromID\[4:0\]} \
+{/top_tb/TOP/ID/rs1_idx_fromIF\[4:0\]} \
+{/top_tb/TOP/ID/rs2_fromID\[31:0\]} \
+{/top_tb/TOP/ID/rs2_idx_fromID\[4:0\]} \
+{/top_tb/TOP/ID/rs2_idx_fromIF\[4:0\]} \
+{/top_tb/TOP/ID/rst} \
+}
+wvAddSignal -win $_nWave1 -group {"G3" \
+}
+wvSelectSignal -win $_nWave1 {( "G2" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 \
+           18 19 20 21 22 23 24 25 26 )} 
+wvSetPosition -win $_nWave1 {("G2" 26)}
+wvGetSignalClose -win $_nWave1
+wvResizeWindow -win $_nWave1 0 23 1280 657
+wvScrollUp -win $_nWave1 3
+wvSelectGroup -win $_nWave1 {G1}
+wvSelectGroup -win $_nWave1 {G1}
+wvSelectGroup -win $_nWave1 {G2}
+wvScrollDown -win $_nWave1 3
+wvScrollUp -win $_nWave1 3
+wvSelectSignal -win $_nWave1 {( "G2" 1 )} 
+wvSelectSignal -win $_nWave1 {( "G2" 1 2 3 4 5 6 7 8 9 10 )} 
+wvSetPosition -win $_nWave1 {("G2" 1)}
+wvSetPosition -win $_nWave1 {("G1" 0)}
+wvMoveSelected -win $_nWave1
+wvSetPosition -win $_nWave1 {("G1" 0)}
+wvSetPosition -win $_nWave1 {("G1" 10)}
+wvScrollDown -win $_nWave1 0
+wvSaveSignal -win $_nWave1 "/homes/nfs/Parker/sandy/H24071037/build/signal.rc"
+wvExit
