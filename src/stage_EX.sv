@@ -13,7 +13,7 @@ module stage_EX(
   output logic [2:0]    funct3_fromEX,
   output logic [4:0]    rs2_idx_fromEX, rd_idx_fromEX,
   output logic [13:0]   mem_addr,
-  output logic [31:0]   rd_fromEX, pc_res, rs2_final
+  output logic [31:0]   rd_fromEX, pc_res, rs2_final, wb_mem
   );
 
 logic     br_cond_tmp, br_cond_final;
@@ -60,7 +60,7 @@ assign pc_res = alu_res;
 always_comb begin
   case (funct3_fromID[2:1])
     `BEQ2:
-      br_cond_tmp = (op1 == op2);
+      br_cond_tmp = (rs1_final == rs2_final);
     `BLT2:
       br_cond_tmp = ($signed(rs1_final) < $signed(rs2_final));
     `BLTU2:
@@ -135,29 +135,47 @@ always_comb begin
       `MemByte:
         case(`AddrLast2)
           // active low
-          2'b00: 
+          2'b00: begin
             wr_mem_en = 4'b1110;
-          2'b01: 
+            wb_mem = rs2_final;
+          end
+          2'b01: begin
             wr_mem_en = 4'b1101;
-          2'b10: 
+            wb_mem = rs2_final << 8;
+          end
+          2'b10: begin
             wr_mem_en = 4'b1011;
-          2'b11: 
+            wb_mem = rs2_final << 16;
+          end
+          2'b11: begin
             wr_mem_en = 4'b0111;
+            wb_mem = rs2_final << 24;
+          end
         endcase
       `MemHalf: 
         case(`AddrLast2)
-          2'b00:
+          2'b00: begin
             wr_mem_en = 4'b1100;
-          2'b01:
+            wb_mem = rs2_final;
+          end
+          2'b01: begin
             wr_mem_en = 4'b1001;
-          default:
+            wb_mem = rs2_final << 8;
+          end
+          default: begin
             wr_mem_en = 4'b0011;
+            wb_mem = rs2_final << 16;
+          end
         endcase
-      default: 
+      default: begin
         wr_mem_en = 4'b0000;
+        wb_mem = rs2_final;
+      end
     endcase
-  else
+  else begin
     wr_mem_en = 4'b1111;
+    wb_mem = rs2_final;
+  end
 end
 
 always_ff @(posedge clk) begin

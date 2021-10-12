@@ -4,7 +4,7 @@ module stage_ID (
   input   clk, rst, flush_ID,
   input   [4:0]   wb_idx,
   input   [31:0]  instr, pc_fromIF, pc4_fromIF, wb_data,  
-  output logic        op1_ctrl, op2_ctrl, rd_src_fromID, mem_wr_fromID, mem_rd_fromIF, mem_rd_fromID,
+  output logic        op1_ctrl, op2_ctrl, rd_src_fromID, mem_wr_fromID, mem_rd_fromID,
   output logic [1:0]  br_op,
   output logic [2:0]  funct3_fromID,
   output logic [3:0]  alu_op,
@@ -78,21 +78,14 @@ always_ff @(posedge clk) begin
     op2_ctrl <= `OP2FromIMM;
 end
 
-always_comb begin
-  if(flush_ID)
-    mem_rd_fromIF <= 1'b0;
-  else
-    if (`OP6to2 == `LD) 
-      mem_rd_fromIF <= 1'b1;
-    else
-      mem_rd_fromIF <= 1'b0;
-end
-
 always_ff @(posedge clk) begin
   if(rst || flush_ID)
     mem_rd_fromID <= 1'b0;
   else
-    mem_rd_fromID <= mem_rd_fromIF;
+    if (`OP6to2 == `LD) 
+      mem_rd_fromID <= 1'b1;
+    else
+      mem_rd_fromID <= 1'b0;
 end
 
 // memory read and write ctrl

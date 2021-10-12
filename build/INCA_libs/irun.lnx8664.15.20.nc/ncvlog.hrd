@@ -1,0 +1,20 @@
+//
+// File created by:  irun
+// Do not modify this file
+//
+-INCDIR
+/home/user2/vsd21/vsd2102/VSD_hw/hw1/H24071037/./syn
+-INCDIR
+/home/user2/vsd21/vsd2102/VSD_hw/hw1/H24071037/./include
+-INCDIR
+/home/user2/vsd21/vsd2102/VSD_hw/hw1/H24071037/./sim
+-DEFINE
+SYN
+-DEFINE
+prog0
+-DEFINE
+FSDB_ALL
+-DEFINE
+CYCLE=9.0
+-DEFINE
+MAX=100000

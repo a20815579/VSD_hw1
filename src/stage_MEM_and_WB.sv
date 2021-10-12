@@ -29,20 +29,21 @@ always_comb begin
 end
 
 always_comb begin
-  if(mem_rd_fromEX)
-    wb_idx = rs2_idx_fromEX;
-  else
+  // if(mem_rd_fromEX)
+  //   wb_idx = rs2_idx_fromEX;
+  // else
     wb_idx = rd_idx_fromEX;
 end
 
 always_ff @(posedge clk) begin
   if (rst) begin
-    //wb_idx_reg <= 5'd0;
     rd_fromMEM <= 32'd0;
   end
   else begin
-    //wb_idx_reg <= rd_idx_fromEX;
-    rd_fromMEM <= rd_fromEX;
+    if(mem_rd_fromEX)
+      rd_fromMEM <= wb_data;
+    else
+      rd_fromMEM <= rd_fromEX;
   end
 end
 

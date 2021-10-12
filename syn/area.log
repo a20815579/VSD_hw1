@@ -1,0 +1,33 @@
+ 
+****************************************
+Report : area
+Design : top
+Version: O-2018.06
+Date   : Mon Oct 11 23:00:15 2021
+****************************************
+
+Information: Updating design information... (UID-85)
+Warning: Design 'top' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+Library(s) Used:
+
+    fsa0m_a_generic_core_ss1p62v125c (File: /usr/cad/CBDK/CBDK018_UMC_Faraday_v1.0/orig_lib/fsa0m_a/2009Q2v2.0/GENERIC_CORE/FrontEnd/synopsys/fsa0m_a_generic_core_ss1p62v125c.db)
+    SRAM_WC (File: /home/user2/vsd21/vsd2102/VSD_hw/hw1/H24071037/sim/SRAM/SRAM_WC.db)
+
+Number of ports:                         1862
+Number of nets:                          9171
+Number of cells:                         7289
+Number of combinational cells:           5847
+Number of sequential cells:              1426
+Number of macros/black boxes:               2
+Number of buf/inv:                       1333
+Number of references:                      12
+
+Combinational area:             105415.127974
+Buf/Inv area:                    14911.545463
+Noncombinational area:           77123.189804
+Macro/Black Box area:          5344494.500000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:               5527032.817778
+Total area:                 undefined
+1

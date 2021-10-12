@@ -1,0 +1,8 @@
+./top_syn.v
+./SRAM/SRAM.v
+/home/user2/vsd21/vsd2102/VSD_hw/hw1/H24071037/./syn/SRAM/SRAM.v
+/home/user2/vsd21/vsd2102/VSD_hw/hw1/H24071037/./include/SRAM/SRAM.v
+.//usr/cad/CBDK/CBDK018_UMC_Faraday_v1.0/orig_lib/fsa0m_a/2009Q2v2.0/GENERIC_CORE/FrontEnd/verilog/fsa0m_a_generic_core_21.lib
+/home/user2/vsd21/vsd2102/VSD_hw/hw1/H24071037/./syn//usr/cad/CBDK/CBDK018_UMC_Faraday_v1.0/orig_lib/fsa0m_a/2009Q2v2.0/GENERIC_CORE/FrontEnd/verilog/fsa0m_a_generic_core_21.lib
+/home/user2/vsd21/vsd2102/VSD_hw/hw1/H24071037/./include//usr/cad/CBDK/CBDK018_UMC_Faraday_v1.0/orig_lib/fsa0m_a/2009Q2v2.0/GENERIC_CORE/FrontEnd/verilog/fsa0m_a_generic_core_21.lib
+/home/user2/vsd21/vsd2102/VSD_hw/hw1/H24071037/./sim//usr/cad/CBDK/CBDK018_UMC_Faraday_v1.0/orig_lib/fsa0m_a/2009Q2v2.0/GENERIC_CORE/FrontEnd/verilog/fsa0m_a_generic_core_21.lib

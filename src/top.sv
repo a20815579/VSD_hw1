@@ -12,16 +12,16 @@ module top (
 );
 
 logic         br_take, stall_IF, flush_ID, rd_src_fromEX, mem_rd_fromEX;
-logic         op1_ctrl, op2_ctrl, rd_src_fromID, mem_wr_fromID, mem_rd_fromIF, mem_rd_fromID;
+logic         op1_ctrl, op2_ctrl, rd_src_fromID, mem_wr_fromID, mem_rd_fromID;
 logic [1:0]   br_op, rs1_ctrl, rs2_ctrl;
 logic [2:0]   funct3_fromID, funct3_fromEX;
 logic [3:0]   alu_op, wr_mem_en;
 logic [4:0]   rs1_idx_fromIF, rs2_idx_fromIF, rs1_idx_fromID, rs2_idx_fromID;
 logic [4:0]   rd_idx_fromID, rd_idx_fromEX, rs2_idx_fromEX, wb_idx;
 logic [13:0]  instr_addr, data_addr; 
-logic [31:0]  instr, instr_from_mem, data_out, pc_fromIF, pc4_fromIF;
+logic [31:0]  instr, instr_from_mem, mem_read_out, pc_fromIF, pc4_fromIF;
 logic [31:0]  wb_data, imm, rs1_fromID, rs2_fromID, pc_fromID, pc4_fromID;
-logic [31:0]  rd_fromEX, rd_fromMEM, pc_res, rs2_final;
+logic [31:0]  rd_fromEX, rd_fromMEM, pc_res, rs2_final, wb_mem;
 
 SRAM_wrapper IM1(
   .CK(clk),
@@ -59,7 +59,6 @@ stage_ID ID(
   .op2_ctrl(op2_ctrl), 
   .rd_src_fromID(rd_src_fromID),
   .mem_wr_fromID(mem_wr_fromID), 
-  .mem_rd_fromIF(mem_rd_fromIF),
   .mem_rd_fromID(mem_rd_fromID),
   .br_op(br_op),
   .funct3_fromID(funct3_fromID),
@@ -110,17 +109,18 @@ stage_EX EX(
   .mem_addr(data_addr),
   .rd_fromEX(rd_fromEX),
   .pc_res(pc_res),
-  .rs2_final(rs2_final)
+  .rs2_final(rs2_final),
+  .wb_mem(wb_mem)
   );
 
 SRAM_wrapper DM1(
     .CK(clk),
     .CS(1'b1),
-    .OE(mem_rd_fromID),
+    .OE(mem_rd_fromEX),
     .WEB(wr_mem_en),
     .A(data_addr),
-    .DI(rs2_final),
-    .DO(data_out)
+    .DI(wb_mem),
+    .DO(mem_read_out)
 );
 
 stage_MEM_and_WB MEMandWB(
@@ -132,7 +132,7 @@ stage_MEM_and_WB MEMandWB(
   .rs2_idx_fromEX(rs2_idx_fromEX),
   .rd_idx_fromEX(rd_idx_fromEX),
   .rd_fromEX(rd_fromEX), 
-  .mem_read_out(data_out),
+  .mem_read_out(mem_read_out),
   .wb_idx(wb_idx),
   .wb_data(wb_data), 
   .rd_fromMEM(rd_fromMEM)
@@ -151,7 +151,7 @@ forward_unit FW(
 );
 
 hazard_unit HZ(
-  .mem_rd_fromIF(mem_rd_fromIF),
+  .mem_rd_fromID(mem_rd_fromID),
   .br_take(br_take),
   .rs1_idx_fromIF(rs1_idx_fromIF), 
   .rs2_idx_fromIF(rs2_idx_fromIF), 
