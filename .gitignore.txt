@@ -1,0 +1,5 @@
+BSSLib.lib++/
+nWaveLog/
+bulid/
+novas.rc
+novas.conf
