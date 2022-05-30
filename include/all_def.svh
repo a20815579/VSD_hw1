@@ -77,8 +77,6 @@
 `define MemHalf      2'b01
 `define MemWord      2'b10
 
-`define AddrLast2     alu_res[1:0]
-
 //other
 `define OP1FromRS1    1'b0
 `define OP1FromPC     1'b1

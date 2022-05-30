@@ -1,17 +1,19 @@
 `include "../include/all_def.svh"
 
+`define AddrLast2     alu_res[1:0]
+
 module stage_EX(
   input   clk, rst, mem_wr_fromID, mem_rd_fromID, op1_ctrl, op2_ctrl, rd_src_fromID,
   input [1:0]     rs1_ctrl, rs2_ctrl, br_op,
   input [2:0]     funct3_fromID,
   input [3:0]     alu_op,
-  input [4:0]     rs2_idx_fromID, rd_idx_fromID,
+  input [4:0]     rd_idx_fromID,
   input [31:0]    imm, pc_fromID, pc4_fromID,
   input [31:0]    rs1_fromID, rs1_fw_fromEX, rs1_fw_fromMEM, rs2_fromID, rs2_fw_fromEX, rs2_fw_fromMEM,
-  output logic    br_take, rd_src_fromEX, mem_rd_fromEX,
+  output logic    br_take, mem_rd_fromEX,
   output logic [3:0]    wr_mem_en,
   output logic [2:0]    funct3_fromEX,
-  output logic [4:0]    rs2_idx_fromEX, rd_idx_fromEX,
+  output logic [4:0]    rd_idx_fromEX,
   output logic [13:0]   mem_addr,
   output logic [31:0]   rd_fromEX, pc_res, rs2_final, wb_mem
   );
@@ -55,6 +57,7 @@ always_ff @(posedge clk) begin
 end
 
 assign pc_res = alu_res;
+assign mem_addr = alu_res[15:2];
 
 // branch condition
 always_comb begin
@@ -124,11 +127,7 @@ always_comb begin
     op2 = imm;
 end
 
-// prepare for store to memory
-always_comb begin
-  mem_addr = alu_res[15:2];
-end
-
+// deal store to mem
 always_comb begin
   if(mem_wr_fromID)
     case(funct3_fromID[1:0])
@@ -180,16 +179,12 @@ end
 
 always_ff @(posedge clk) begin
   if (rst) begin    
-    rs2_idx_fromEX <= 5'd0;
     mem_rd_fromEX <= 1'b0;
-    rd_src_fromEX <= 1'b0;
     rd_idx_fromEX <= 5'd0;
     funct3_fromEX <= 3'd0;
   end
   else begin
-    rs2_idx_fromEX <= rs2_idx_fromID;
     mem_rd_fromEX <= mem_rd_fromID;
-    rd_src_fromEX <= rd_src_fromID;
     rd_idx_fromEX <= rd_idx_fromID;
     funct3_fromEX <= funct3_fromID; 
   end

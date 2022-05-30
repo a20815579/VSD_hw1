@@ -3,16 +3,16 @@
 Report : qor
 Design : top
 Version: O-2018.06
-Date   : Mon Oct 11 23:00:15 2021
+Date   : Tue Oct 19 15:59:32 2021
 ****************************************
 
 
   Timing Path Group 'clk'
   -----------------------------------
-  Levels of Logic:              13.00
-  Critical Path Length:          8.77
+  Levels of Logic:              17.00
+  Critical Path Length:          8.39
   Critical Path Slack:           0.00
-  Critical Path Clk Period:      9.00
+  Critical Path Clk Period:      8.70
   Total Negative Slack:          0.00
   No. of Violating Paths:        0.00
   Worst Hold Violation:          0.00
@@ -23,53 +23,53 @@ Date   : Mon Oct 11 23:00:15 2021
 
   Cell Count
   -----------------------------------
-  Hierarchical Cell Count:         14
-  Hierarchical Port Count:       1860
-  Leaf Cell Count:               7275
-  Buf/Inv Cell Count:            1333
-  Buf Cell Count:                 578
-  Inv Cell Count:                 755
+  Hierarchical Cell Count:         13
+  Hierarchical Port Count:       1816
+  Leaf Cell Count:               7402
+  Buf/Inv Cell Count:            1456
+  Buf Cell Count:                 587
+  Inv Cell Count:                 869
   CT Buf/Inv Cell Count:            0
-  Combinational Cell Count:      5847
-  Sequential Cell Count:         1426
+  Combinational Cell Count:      5990
+  Sequential Cell Count:         1410
   Macro Count:                      2
   -----------------------------------
 
 
   Area
   -----------------------------------
-  Combinational Area:   105415.127974
-  Noncombinational Area: 77123.189804
-  Buf/Inv Area:          14911.545463
-  Total Buffer Area:          8293.22
-  Total Inverter Area:        6618.33
+  Combinational Area:   110074.204726
+  Noncombinational Area: 76763.837627
+  Buf/Inv Area:          17717.615829
+  Total Buffer Area:          9102.54
+  Total Inverter Area:        8615.07
   Macro/Black Box Area:
                        5344494.500000
   Net Area:                  0.000000
   -----------------------------------
-  Cell Area:           5527032.817778
-  Design Area:         5527032.817778
+  Cell Area:           5531332.542353
+  Design Area:         5531332.542353
 
 
   Design Rules
   -----------------------------------
-  Total Number of Nets:          7406
+  Total Number of Nets:          7496
   Nets With Violations:             0
   Max Trans Violations:             0
   Max Cap Violations:               0
   -----------------------------------
 
 
-  Hostname: vlsicad9
+  Hostname: vlsicad6
 
   Compile CPU Statistics
   -----------------------------------------
-  Resource Sharing:                    4.44
-  Logic Optimization:                 41.39
-  Mapping Optimization:               56.20
+  Resource Sharing:                    4.21
+  Logic Optimization:                 39.36
+  Mapping Optimization:              103.81
   -----------------------------------------
-  Overall Compile Time:              108.18
-  Overall Compile Wall Clock Time:   109.92
+  Overall Compile Time:              153.17
+  Overall Compile Wall Clock Time:   154.98
 
   --------------------------------------------------------------------
 

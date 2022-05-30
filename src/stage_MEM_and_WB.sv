@@ -1,13 +1,13 @@
 module stage_MEM_and_WB (
-  input   clk, rst, mem_rd_fromEX, rd_src_fromEX,
+  input   clk, rst, mem_rd_fromEX,
   input [2:0]   funct3_fromEX,
-  input [4:0]   rs2_idx_fromEX ,rd_idx_fromEX,
+  input [4:0]   rd_idx_fromEX,
   input [31:0]  rd_fromEX, mem_read_out,
   output logic [4:0]    wb_idx,
   output logic [31:0]   wb_data, rd_fromMEM
 );
 
-// load
+// deal load
 always_comb begin
   if(mem_rd_fromEX)
     case(funct3_fromEX)
@@ -28,12 +28,7 @@ always_comb begin
     wb_data = rd_fromEX;
 end
 
-always_comb begin
-  // if(mem_rd_fromEX)
-  //   wb_idx = rs2_idx_fromEX;
-  // else
-    wb_idx = rd_idx_fromEX;
-end
+assign wb_idx = rd_idx_fromEX;
 
 always_ff @(posedge clk) begin
   if (rst) begin

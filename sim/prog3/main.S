@@ -2,149 +2,101 @@
 .align 2
 .globl main
 main:
-    lw      a0, 0x348(zero) #a0->a
-    lw      a1, 0x34c(zero) #a1->b
-    lui     t0, 0x8         #t0->&_test_start
+    lw      t0, div1        # t0 = div1
+    lw      t1, div2        # t1 = div2
 start_loop:
-    beqz    a0, end_loop0   #a0==0
-    beqz    a1, end_loop1   #a1==0
-    blt     a0, a1, update1
-update0:
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    sub     a0, a0, a1
-    blt     a0, a1, start_loop
-    j       update0
-update1:
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    sub     a1, a1, a0
-    blt     a1, a0, start_loop
-    j       update1
-
-end_loop0:
-    sw      a1, 0(t0)
+    beq     t0, x0, end_remain1   # t0 == 0
+    beq     t1, x0, end_remain2   # t1 == 0
+    blt     t0, t1, remain2
+remain1:
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    blt     t0, t1, start_loop
+    sub     t0, t0, t1
+    j       remain1
+remain2:
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    sub     t1, t1, t0
+    blt     t1, t0, start_loop
+    j       remain2
+end_remain1:
+    la      t2, _test_start
+    sw      t1, 0(t2)
     ret
-end_loop1:
-    sw      a0, 0(t0)
+end_remain2:
+    sw      t0, 0(t2)
     ret

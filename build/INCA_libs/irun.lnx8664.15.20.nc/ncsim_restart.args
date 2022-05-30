@@ -1,0 +1,27 @@
+//
+// File created by:  irun
+// Do not modify this file
+//
++prog_path=/home/user2/vsd21/vsd2102/Desktop/hw1/H24071037/./sim/prog3
++incdir+/home/user2/vsd21/vsd2102/Desktop/hw1/H24071037/./syn+/home/user2/vsd21/vsd2102/Desktop/hw1/H24071037/./include+/home/user2/vsd21/vsd2102/Desktop/hw1/H24071037/./sim
++define+SYN+prog3+FSDB_ALL
++access+r
+-MESSAGES
++EMGRLOG
+irun.log
+-XLSTIME
+1634630607
+-XLKEEP
+-XLMODE
+./INCA_libs/irun.lnx8664.15.20.nc
+-RUNMODE
+-CDSLIB
+./INCA_libs/irun.lnx8664.15.20.nc/cds.lib
+-HDLVAR
+./INCA_libs/irun.lnx8664.15.20.nc/hdl.var
+-XLNAME
+irun
+-XLVERSION
+"TOOL:	irun(64)	15.20-s039"
+-XLNAME
+./INCA_libs/irun.lnx8664.15.20.nc/vlsicad6_23969
